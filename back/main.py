@@ -15,7 +15,7 @@ CORS(app)
 
 # user = pd.DataFrame(0, index=df.index, columns=df.columns)
 user = pd.DataFrame(0, columns=df['video_id'], index=[0])
-recomended: list | None = None
+recomended: list = []
 rec_id: int | None = None
 
 @app.route('/video', methods=['GET']) # передать доп данные для отображения
