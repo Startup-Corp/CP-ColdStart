@@ -69,7 +69,7 @@ def comment():
 @app.route('/predict', methods=['GET'])
 def predict():
     global recomended
-    if recomended:
+    if recomended is not None:
         for i in recomended:
             user[i] -= 0.5
 
