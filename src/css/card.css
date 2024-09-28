@@ -3,10 +3,7 @@
 
   background-color: transparent;
   padding: 0.6em 1em;
-  border-radius: 10px;
-  border: 1px solid white;
   text-align: left;
-  cursor: pointer;
   transition: border 0.3s ease;
   max-width: calc(100% - 10px);
 
@@ -22,7 +19,13 @@
   color: inherit; /* Цвет текста остается прежним */
 }
 
-.card:hover {
+.border {
+  border-radius: 10px;
+  border: 1px solid white;
+  cursor: pointer;
+}
+
+.border:hover {
   border: 1px solid #0080ff;
 }
 

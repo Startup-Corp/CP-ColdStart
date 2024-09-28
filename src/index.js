@@ -7,15 +7,10 @@ import VideoPage from './js/[videoId]';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-// root.render(
-//     <ChooseVideoPage />
-// )
-
 root.render(
     <Router>
         <Routes>
             <Route path="/" element={<ChooseVideoPage />} />
-            {/* <Route path="/home" element={<VideoPageTest />} /> */}
             <Route path=":videoId" element={<VideoPage />} />
         </Routes>
     </Router>

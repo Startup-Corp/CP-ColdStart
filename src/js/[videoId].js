@@ -1,7 +1,9 @@
-import React from 'react'
+import React from "react";
 import "../css/VideoPage.css";
-import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import like from "../like.svg";
+import dislike from "../dislike.svg";
+import share from "../Share.svg";
 
 let videoData = null;
 function VideoPage() {
@@ -12,12 +14,12 @@ function VideoPage() {
 
   function get_video_data(url) {
     console.log(url);
-    
+
     fetch(url, {
       method: "GET",
       headers: {
-        ContentType: "application/json"
-      }
+        ContentType: "application/json",
+      },
     })
       .then((response) => {
         console.log(response);
@@ -29,15 +31,44 @@ function VideoPage() {
 
   useEffect(() => get_video_data(url), [url]);
 
-  // console.log(data);
-  // if (data == null || videoData != null) return;
-  // console.log("test");
+  console.log(data);
+  if (data == null || videoData != null) return;
+  console.log("test");
 
   videoData = data;
   console.log(videoData);
 
   const handleRefresh = () => {
     window.location.reload();
+  };
+
+  // Обработчики кликов
+  const handleLikeClick = async (event) => {
+    event.preventDefault();
+    const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=1";
+
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        ContentType: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .catch((error) => console.error(error));
+  };
+
+  const handleDislikeClick = async (event) => {
+    event.preventDefault();
+    const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=0";
+
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        ContentType: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -53,19 +84,34 @@ function VideoPage() {
           </button>
         </div>
       </header>
-      <div className="content">
-        <div className="Video">
-          <div className="card">
-            <img src="https://avatars.mds.yandex.net/i?id=4f7586d49edaa427e07a8819562fc284_l-5248434-images-thumbs&n=13" />
-            {/* <h3>{videoData.title}</h3> */}
+      <div className="body-container content">
+        <div className="card">
+          <div className="img_container">
+            <img
+              className="videoImg"
+              src="https://avatars.mds.yandex.net/i?id=4f7586d49edaa427e07a8819562fc284_l-5248434-images-thumbs&n=13"
+            />
             <div className="category_section">
-              {/* <p>
-                Категория {videoData.category} |{" "}
-                {videoData.tags
-                  .slice(0, 3)
-                  .map((tag) => `#${tag}`)
-                  .join(" ")}
-              </p> */}
+              <h3>{videoData.title}</h3>
+              <p>Категория {videoData.category}</p>
+            </div>
+            <div className="react-section">
+              {/* Лайк */}
+              <div className="like-section" onClick={handleLikeClick}>
+                <img src={like} alt="Likes" />
+                <p>{videoData.v_likes}</p>
+              </div>
+
+              {/* Дизлайк */}
+              <div className="dislike-section" onClick={handleDislikeClick}>
+                <img src={dislike} alt="Dislikes" />
+                <p>{videoData.v_dislikes}</p>
+              </div>
+
+              {/* Шаринг */}
+              <div className="shared_section">
+                <img src={share} alt="Share" />
+              </div>
             </div>
           </div>
         </div>
