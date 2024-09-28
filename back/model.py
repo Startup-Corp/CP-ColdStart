@@ -35,17 +35,29 @@ class ModelGBM:
         cat_pop = 'v_category_popularity_percent_30_days' # популярность категории
         # cr_clk = 'v_cr_click_long_view_7_days' # привлекает длинные клики
 
-        top_views_df = self.dataset.sort_values(top_views, ascending=False)['video_id'].head(100)
-        avg_wt_df = self.dataset.sort_values(avg_wt, ascending=False)['video_id'].head(100)
-        f_avg_wt_df = self.dataset.sort_values(f_avg_wt, ascending=False)['video_id'].head(100)
+        top_views_df = self.dataset.sort_values(top_views, ascending=False)['video_id'].head(20)
+        avg_wt_df = self.dataset.sort_values(avg_wt, ascending=False)['video_id'].head(20)
+        f_avg_wt_df = self.dataset.sort_values(f_avg_wt, ascending=False)['video_id'].head(20)
         # long_views_df = self.dataset.sort_values(long_views, ascending=False)['video_id'].head(100)
-        cat_pop_df = self.dataset.sort_values(cat_pop, ascending=False)['video_id'].head(100)
+        cat_pop_df = self.dataset.sort_values(cat_pop, ascending=False)['video_id'].head(20)
         # cr_clk_df = self.dataset.sort_values(cr_clk, ascending=False)['video_id'].head(100)
 
+        print(top_views_df.shape)
+        print(avg_wt_df.shape)
+        print(f_avg_wt_df.shape)
+        print(cat_pop_df.shape)
         res = csr_array(rating_vec.values).dot(self.csr).toarray().flatten()
-        print(res)
         top_similar = pd.Series(res.argsort()[-100:][::-1])
-        print(top_similar)
+
+        not_interacted = rating_vec.columns[(rating_vec == 0).iloc[0]]
+
+
+
+        return (top_similar[top_similar.isin(not_interacted)],
+               top_views_df[top_views_df.isin(not_interacted)],
+               avg_wt_df[avg_wt_df.isin(not_interacted)],
+               f_avg_wt_df[f_avg_wt_df.isin(not_interacted)],
+               cat_pop_df[cat_pop_df.isin(not_interacted)])
 
 
         res = pd.concat([top_similar, top_views_df, avg_wt_df, f_avg_wt_df, cat_pop_df])
@@ -61,13 +73,16 @@ class ModelGBM:
         user_features - вектор признаков юзера (region, city)
         """
         candidates = self.candidate_selection(rating_vec, user_features)
-        candidates_df = self.dataset[self.dataset['video_id'].isin(candidates)]
-
-        print(candidates_df.drop(columns=['video_id']).columns)
-        res = self.model.predict(candidates_df.drop(columns=['video_id']))
+        candidates_res = np.array([])
+        for cand in candidates:
+            candidates_df = self.dataset[self.dataset['video_id'].isin(cand)]
+            # print(candidates_df.drop(columns=['video_id']).columns)
+            res = self.model.predict(candidates_df.drop(columns=['video_id']))
         
-        res_ids = candidates_df[['video_id']].assign(rating=res).sort_values('rating', ascending=False).head(10)['video_id'].values
-        return res_ids
+            res_ids = candidates_df[['video_id']].assign(rating=res).sort_values('rating', ascending=False).head(2)['video_id'].values
+            candidates_res = np.concatenate([candidates_res, res_ids])
+
+        return candidates_res
 
 
 if __name__ == '__main__':
