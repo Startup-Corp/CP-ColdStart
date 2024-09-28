@@ -19,9 +19,8 @@ recomended: list | None = None
 
 @app.route('/video', methods=['GET']) # передать доп данные для отображения
 def video():
-    inp_data = request.get_json()
-    
-    video_id = inp_data.get('id')
+    video_id = int(request.args.get('id'))
+
     if not video_id:
         return jsonify({'status': 'no video_id'})
     
@@ -34,15 +33,14 @@ def video():
     return data.get_data_to_view(video_id)
 # title, description, category, likes, dislikes
 
-@app.route('/react', methods=['POST'])
+@app.route('/react', methods=['GET'])
 def react():
-    inp_data = request.get_json()
-    
-    video_id = inp_data.get('id')
+    video_id = int(request.args.get('id'))
+    rating = int(request.args.get('rating', 0))
     if not video_id:
         return jsonify({'status': 'no video_id'})
 
-    rating = inp_data.get('rating', 0) # 0 - dis, 1 - like
+    # rating = inp_data.get('rating', 0) # 0 - dis, 1 - like
     
     if rating == 1:
         user[video_id] += 2
@@ -51,17 +49,13 @@ def react():
 
     return jsonify({'status': 'ok'})
 
-@app.route('/comment', methods=['POST'])
+@app.route('/comment', methods=['GET'])
 def comment():
-    inp_data = request.get_json()
-    
-    video_id = inp_data.get('id')
+    video_id = int(request.args.get('id'))
+    comment = int(request.args.get('comment', 0))
+
     if not video_id:
         return jsonify({'status': 'no video_id'})
-
-    comment = inp_data.get('comment', 0) # 0 - dis, 1 - like
-    
-    # user[video_id] += rating
 
     return jsonify({'status': 'ok'})
 
