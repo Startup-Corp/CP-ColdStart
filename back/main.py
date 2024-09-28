@@ -73,7 +73,7 @@ def predict():
         for i in recomended:
             user[i] -= 0.5
 
-    ids = model.pred()
+    ids = model.pred(user)
     
     recomended = ids
     # print(ids)

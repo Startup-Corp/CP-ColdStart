@@ -47,7 +47,7 @@ class ModelGBM:
         # top_similar = load_npz(self.csr_path).dot(csr_rating).toarray().argsort()[-100:][::-1]
 
 
-        res = top_views_df.append(avg_wt_df).append(f_avg_wt_df).append(cat_pop_df).to_list()
+        res = top_views_df.append(avg_wt_df).append(f_avg_wt_df).append(cat_pop_df)
         
         not_interacted = rating_vec.columns[(rating_vec == 0).iloc[0]]
 

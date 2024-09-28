@@ -63,7 +63,7 @@ class Dataset:
                 'title': v['title'],
                 'desc': v['description'],
                 'category': v['category_id'],
-                'views': v['v_year_views'],
+                'views': int(v['v_year_views']),
                 'pub_datetime': v['v_pub_datetime'],
             })
         return res
