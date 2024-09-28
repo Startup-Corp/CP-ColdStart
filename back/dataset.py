@@ -59,7 +59,7 @@ class Dataset:
         for i in range(len(top_10)):
             v = top_10.iloc[i, :]
             res.append({
-                'id': v['video_id'],
+                'id': int(v['video_id']),
                 'title': v['title'],
                 'desc': v['description'],
                 'category': v['category_id']

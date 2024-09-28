@@ -31,7 +31,7 @@ class ModelGBM:
         long_views = 'v_long_views_30_days'
         cat_pop = ''
 
-    def pred(self, rating_vec: np.ndarray, user_features: np.ndarray):
+    def pred(self, rating_vec: np.ndarray = None, user_features: np.ndarray = None):
         """
         rating_vec - вектор рейтингов для каждого видео
         user_features - вектор признаков юзера (region, city)
