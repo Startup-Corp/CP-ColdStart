@@ -10,8 +10,8 @@ function VideoPage() {
   const [data, setData] = useState(null);
   // const { id } = useParams();
   const id = window.location.search.split("=")[1];
-  const url = "http://87.242.86.81:5005/video?id=" + id;
-  // const url = "http://127.0.0.1:5005/video?id=" + id;
+  // const url = "http://87.242.86.81:5005/video?id=" + id;
+  const url = "http://127.0.0.1:5005/video?id=" + id;
 
   function get_video_data(url) {
     console.log(url);
@@ -46,8 +46,8 @@ function VideoPage() {
   // Обработчики кликов
   const handleLikeClick = async (event) => {
     event.preventDefault();
-    const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=1";
-    // const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=1";
+    // const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=1";
+    const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=1";
 
     await fetch(url, {
       method: "GET",
@@ -61,8 +61,8 @@ function VideoPage() {
 
   const handleDislikeClick = async (event) => {
     event.preventDefault();
-    const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=0";
-    // const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=0";
+    // const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=0";
+    const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=0";
 
     await fetch(url, {
       method: "GET",
@@ -74,12 +74,36 @@ function VideoPage() {
       .catch((error) => console.error(error));
   };
 
+  const handleShareClick = () => {
+    const copy = window.location.href;
+    const textArea = document.createElement('textarea');
+    textArea.value = copy;
+    // Добавляем его в DOM
+    document.body.appendChild(textArea);
+    // Выделяем текст
+    textArea.select();
+    textArea.setSelectionRange(0, 99999); // Для мобильных устройств
+    // Копируем текст
+    document.execCommand('copy');
+    // Удаляем временный элемент
+    document.body.removeChild(textArea);
+    
+    const toast = document.getElementById("Toast");
+    toast.classList.add("toast-show");
+
+    setTimeout(() => {
+      toast.classList.remove("toast-show");
+  }, 2000); 
+  };
+
   return (
     <div className="ChooseVideoPage">
       <header className="ChooseVideoPage-header">
         <div className="top-bar content">
           <div className="label">
-            <h1><a href="/">RUTUBE</a></h1>
+            <h1>
+              <a href="/">RUTUBE</a>
+            </h1>
             <div id="label-circle"></div>
           </div>
           <a href="/" className="refresh-button">
@@ -112,12 +136,15 @@ function VideoPage() {
               </div>
 
               {/* Шаринг */}
-              <div className="shared_section">
+              <div className="shared_section" onClick={handleShareClick}>
                 <img src={share} alt="Share" />
               </div>
             </div>
           </div>
         </div>
+      </div>
+      <div id="Toast" className="">
+          <p>Ссылка скопирована!</p>
       </div>
     </div>
   );
