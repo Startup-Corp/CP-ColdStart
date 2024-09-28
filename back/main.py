@@ -2,18 +2,19 @@ from flask import Flask, request, jsonify
 from model import ModelGBM
 import pandas as pd
 from dataset import Dataset
+from flask_cors import CORS
 
 data = Dataset('./files/mvp_movie.parquet')
 df = data.get_data_for_pred()
 
 model = ModelGBM('./files/lgbr_v1.txt', df)
 app = Flask(__name__)
-
+CORS(app)
 
 @app.route('/predict', methods=['GET'])
 def predict():
     ids = model.pred()
-    print(ids)
+    # print(ids)
 
     response = {
         'predictions': data.get_data_by_ids(ids)
