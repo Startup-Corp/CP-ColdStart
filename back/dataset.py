@@ -62,7 +62,9 @@ class Dataset:
                 'id': int(v['video_id']),
                 'title': v['title'],
                 'desc': v['description'],
-                'category': v['category_id']
+                'category': v['category_id'],
+                'views': v['v_year_views'],
+                'pub_datetime': v['v_pub_datetime'],
             })
         return res
 
