@@ -7,8 +7,8 @@ function ChooseVideoPage() {
   const [data, setData] = useState(null);
 
   function get_data() {
-    // fetch("http://87.242.86.81:5005/predict")
-    fetch("http://127.0.0.1:5005/predict")
+    // fetch("http://127.0.0.1:5005/predict")
+    fetch("http://87.242.86.81:5005/predict")
     .then((response) => response.json())
     .then((data) => setData(data))
     .catch((error) => console.error(error));
@@ -20,13 +20,6 @@ function ChooseVideoPage() {
   if (data == null || recommendations != null) return;
   console.log("test");
 
-  // recommendations = Array(10).fill({
-  //   title: "Звёзды в джунглях, 1 сезон, 1 выпуск",
-  //   category: "Природа",
-  //   tags: ["Звезды", "Природа"],
-  //   views: "55",
-  //   post_time: "5 дней назад",
-  // });
   recommendations = data.predictions;
   console.log(recommendations);
 

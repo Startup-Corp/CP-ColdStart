@@ -14,8 +14,8 @@ function VideoPage() {
   const [data, setData] = useState(null);
   // const { id } = useParams();
   const id = window.location.search.split("=")[1];
-  // const url = "http://87.242.86.81:5005/video?id=" + id;
-  const url = "http://127.0.0.1:5005/video?id=" + id;
+  const url = "http://87.242.86.81:5005/video?id=" + id;
+  // const url = "http://127.0.0.1:5005/video?id=" + id;
 
   function get_video_data(url) {
     console.log(url);
@@ -51,8 +51,8 @@ function VideoPage() {
     if (commentIsClicked) return;
     commentIsClicked = true;
     event.preventDefault();
-    // const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=1";
-    const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=comment";
+    const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=comment";
+    // const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=comment";
 
     await fetch(url, {
       method: "GET",
@@ -72,8 +72,8 @@ function VideoPage() {
     if (likeClicked) return;
     likeClicked = true;
     event.preventDefault();
-    // const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=1";
-    const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=like";
+    const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=like";
+    // const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=like";
 
     await fetch(url, {
       method: "GET",
@@ -93,8 +93,8 @@ function VideoPage() {
     dislikeClicked = true;
 
     event.preventDefault();
-    // const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=0";
-    const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=dislike";
+    const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=dislike";
+    // const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=dislike";
 
     await fetch(url, {
       method: "GET",
@@ -133,7 +133,8 @@ function VideoPage() {
     if (isShared) return;
     isShared = true;
 
-    const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=share";
+    const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=share";
+    // const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=share";
 
     fetch(url, {
       method: "GET",
