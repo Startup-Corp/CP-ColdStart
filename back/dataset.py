@@ -49,7 +49,7 @@ class Dataset:
         video = self.df_video[self.df_video['video_id'] == id].iloc[0]
         return video[
             ['video_id', 'title', 'description', 'category_id', 'v_likes', 'v_dislikes']
-        ].to_json(force_ascii=False)
+        ].to_dict()
 
 
     def get_data_by_ids(self, ids: list):
