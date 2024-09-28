@@ -14,10 +14,10 @@ app = Flask(__name__)
 
 # user = pd.DataFrame(0, index=df.index, columns=df.columns)
 user = pd.DataFrame(0, columns=df['video_id'], index=[0])
-recomended = list | None
+recomended: list | None = None
 
 @app.route('/video', methods=['GET']) # передать доп данные для отображения
-def react():
+def video():
     inp_data = request.get_json()
     
     video_id = inp_data.get('id')
@@ -73,6 +73,8 @@ def predict():
             user[i] -= 0.5
 
     ids = model.pred()
+    
+    global recomended
     recomended = ids
     # print(ids)
 
