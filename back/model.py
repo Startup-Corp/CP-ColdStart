@@ -28,7 +28,6 @@ class ModelGBM:
         current_time = pd.Timestamp.now()
 
 
-
         top_views = 'v_week_views' # много просмотров
         avg_wt = 'v_avg_watchtime_7_day' # дольше всего смотрели
         f_avg_wt = 'v_frac_avg_watchtime_30_day_duration' # лучшая досматриваемость
@@ -53,8 +52,6 @@ class ModelGBM:
         not_interacted = rating_vec.columns[(rating_vec == 0).iloc[0]]
 
         return res[res.isin(not_interacted)]
-
-        
 
     def pred(self, rating_vec: np.ndarray = None, user_features: np.ndarray = None):
         """

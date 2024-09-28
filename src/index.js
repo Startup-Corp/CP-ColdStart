@@ -1,12 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './css/index.css';
-import VideoPage from './js/VideoPage';
-import reportWebVitals from './reportWebVitals';
+import ChooseVideoPage from './js/ChooseVideoPage';
+import VideoPage from './js/[videoId]';
+// import VideoPageTest from './js/Home';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <VideoPage />
+    <Router>
+        <Routes>
+            <Route path="/" element={<ChooseVideoPage />} />
+            <Route path=":videoId" element={<VideoPage />} />
+        </Routes>
+    </Router>
 );
 
 // If you want to start measuring performance in your app, pass a function
