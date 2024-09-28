@@ -7,6 +7,7 @@ class Dataset:
     def __init__(self, path_video: str):
         self.df_video = pd.read_parquet(path_video, engine='pyarrow')
         self.predict_data = None
+        print(self.df_video)
 
 
     # def create_rank(self, row):
@@ -43,6 +44,12 @@ class Dataset:
         if self.predict_data is None:
             self.dataset_prepare()
         return self.predict_data
+    
+    def get_data_to_view(self, id):
+        video = self.df_video[self.df_video['video_id'] == id].iloc[0]
+        return video[
+            ['video_id', 'title', 'description', 'category_id', 'v_likes', 'v_dislikes']
+        ].to_json(force_ascii=False)
 
 
     def get_data_by_ids(self, ids: list):
