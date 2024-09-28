@@ -42,16 +42,18 @@ class ModelGBM:
         cat_pop_df = self.dataset.sort_values(cat_pop, ascending=False)['video_id'].head(100)
         # cr_clk_df = self.dataset.sort_values(cr_clk, ascending=False)['video_id'].head(100)
 
-        # csr_rating = csr_array(rating_vec)
-        # top_similar = load_npz(self.csr_path).dot(csr_rating).toarray().argsort()[-100:][::-1]
+        res = csr_array(rating_vec.values).dot(self.csr).toarray().flatten()
+        print(res)
+        top_similar = pd.Series(res.argsort()[-100:][::-1])
+        print(top_similar)
 
 
-        res = pd.concat([top_views_df, avg_wt_df, f_avg_wt_df, cat_pop_df])
+        res = pd.concat([top_similar, top_views_df, avg_wt_df, f_avg_wt_df, cat_pop_df])
         # res = top_views_df.append(avg_wt_df).append(f_avg_wt_df).append(cat_pop_df)
         
         not_interacted = rating_vec.columns[(rating_vec == 0).iloc[0]]
 
-        return res[res.isin(not_interacted)]
+        return res[res.isin(not_interacted)].unique()
 
     def pred(self, rating_vec: np.ndarray = None, user_features: np.ndarray = None):
         """
