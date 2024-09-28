@@ -3,3 +3,5 @@ numpy
 pandas
 lightgbm
 flask
+pyarrow
+flask_cors
