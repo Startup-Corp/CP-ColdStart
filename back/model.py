@@ -42,10 +42,6 @@ class ModelGBM:
         cat_pop_df = self.dataset.sort_values(cat_pop, ascending=False)['video_id'].head(20)
         # cr_clk_df = self.dataset.sort_values(cr_clk, ascending=False)['video_id'].head(100)
 
-        print(top_views_df.shape)
-        print(avg_wt_df.shape)
-        print(f_avg_wt_df.shape)
-        print(cat_pop_df.shape)
         res = csr_array(rating_vec.values).dot(self.csr).toarray().flatten()
         top_similar = pd.Series(res.argsort()[-100:][::-1])
 
@@ -60,12 +56,6 @@ class ModelGBM:
                cat_pop_df[cat_pop_df.isin(not_interacted)])
 
 
-        res = pd.concat([top_similar, top_views_df, avg_wt_df, f_avg_wt_df, cat_pop_df])
-        # res = top_views_df.append(avg_wt_df).append(f_avg_wt_df).append(cat_pop_df)
-        
-        not_interacted = rating_vec.columns[(rating_vec == 0).iloc[0]]
-
-        return res[res.isin(not_interacted)].unique()
 
     def pred(self, rating_vec: np.ndarray = None, user_features: np.ndarray = None):
         """
@@ -74,12 +64,14 @@ class ModelGBM:
         """
         candidates = self.candidate_selection(rating_vec, user_features)
         candidates_res = np.array([])
-        for cand in candidates:
+        cand_name = ['top_similar', 'top_views_df', 'avg_wt_df', 'f_avg_wt_df', 'cat_pop_df']
+        for i, cand in enumerate(candidates):
             candidates_df = self.dataset[self.dataset['video_id'].isin(cand)]
             # print(candidates_df.drop(columns=['video_id']).columns)
             res = self.model.predict(candidates_df.drop(columns=['video_id']))
         
             res_ids = candidates_df[['video_id']].assign(rating=res).sort_values('rating', ascending=False).head(2)['video_id'].values
+            print(cand_name[i], res_ids)
             candidates_res = np.concatenate([candidates_res, res_ids])
 
         return candidates_res
