@@ -74,7 +74,6 @@ def predict():
             user[i] -= 0.5
 
     ids = model.pred(user)
-    
     recomended = ids
     # print(ids)
 

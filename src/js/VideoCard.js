@@ -2,11 +2,10 @@ import '../css/card.css';
 import eye from "../Eye.svg"
 
 function VideoCard(rec, index) {
-  // console.log(rec);
   rec.tags = ["Звезды", "Природа"]
 
   return (
-    <div className="card" key={index}>
+    <a href={'/video?id=' + rec.id} className="card" key={index}>
       <h3>{rec.title}</h3>
       <div className='category_section'>
         <p>Категория {rec.category} | {rec.tags.slice(0, 3).map(tag => `#${tag}`).join(' ')}</p>
@@ -19,7 +18,7 @@ function VideoCard(rec, index) {
         <div className='circle' />
         <p>{rec.post_time}</p>
       </div>
-    </div>
+    </a>
   );
 }
 
