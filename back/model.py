@@ -3,7 +3,10 @@ import pandas as pd
 
 class ModelGBM:
     def __init__(self, path_to_model, dataset: pd.DataFrame ) -> None:
-        self.model = lightgbm.Booster(model_file=path_to_model)
+        with open(path_to_model, 'r') as file:
+            data = file.read()
+
+        self.model = lightgbm.Booster(model_str=data)
         self.dataset = dataset
 
     def pred(self):
