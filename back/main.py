@@ -16,6 +16,7 @@ CORS(app)
 # user = pd.DataFrame(0, index=df.index, columns=df.columns)
 user = pd.DataFrame(0, columns=df['video_id'], index=[0])
 recomended: list | None = None
+rec_id: int | None = None
 
 @app.route('/video', methods=['GET']) # передать доп данные для отображения
 def video():
@@ -24,8 +25,10 @@ def video():
     if not video_id:
         return jsonify({'status': 'no video_id'})
     
-    global recomended
-    recomended = None
+    # global recomended
+    global rec_id
+    rec_id = video_id
+    # recomended = None
 
     user[video_id] += 1
 
@@ -63,9 +66,10 @@ def comment():
 @app.route('/predict', methods=['GET'])
 def predict():
     global recomended
-    if recomended is not None:
-        for i in recomended:
-            user[i] -= 0.5
+    for i in recomended:
+        user[i] -= 0.5
+    if rec_id is not None:
+        user[rec_id] += 0.5
 
     ids = model.pred(user)
     recomended = ids
