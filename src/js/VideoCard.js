@@ -2,6 +2,9 @@ import '../css/card.css';
 import eye from "../Eye.svg"
 
 function VideoCard(rec, index) {
+  // console.log(rec);
+  rec.tags = ["Звезды", "Природа"]
+
   return (
     <div className="card" key={index}>
       <h3>{rec.title}</h3>

@@ -3,6 +3,7 @@ from model import ModelGBM
 import pandas as pd
 from dataset import Dataset
 import numpy as np
+from flask_cors import CORS
 
 data = Dataset('./files/mvp_movie.parquet')
 df = data.get_data_for_pred()
@@ -52,11 +53,12 @@ def comment():
     # user[video_id] += rating
 
     return jsonify({'status': 'ok'})
+CORS(app)
 
 @app.route('/predict', methods=['GET'])
 def predict():
     ids = model.pred()
-    print(ids)
+    # print(ids)
 
     response = {
         'predictions': data.get_data_by_ids(ids)
@@ -66,4 +68,4 @@ def predict():
 
 if __name__ == '__main__':
     data.dataset_prepare()
-    app.run(debug=True, port=5005)
+    app.run(debug=True, port=5005, host='0.0.0.0')
