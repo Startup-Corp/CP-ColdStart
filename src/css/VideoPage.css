@@ -50,7 +50,8 @@
 
 .like-section,
 .dislike-section,
-.shared_section {
+.shared_section,
+.comments-section {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -66,6 +67,11 @@
     font-size: 1em;
     margin: auto 0;
   }
+}
+
+#comments {
+  color: white;
+  cursor: pointer;
 }
 
 .shared_section img {
