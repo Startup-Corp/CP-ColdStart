@@ -30,6 +30,7 @@
   /* background-color: green; */
   height: fit-content;
   /* margin-left: 2em; */
+  margin: auto 0;
 }
 
 .label h1 {

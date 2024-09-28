@@ -10,7 +10,8 @@ function VideoPage() {
   const [data, setData] = useState(null);
   // const { id } = useParams();
   const id = window.location.search.split("=")[1];
-  const url = "http://87.242.86.81:5005/video?id=" + id;
+  // const url = "http://87.242.86.81:5005/video?id=" + id;
+  const url = "http://127.0.0.1:5005/video?id=" + id;
 
   function get_video_data(url) {
     console.log(url);
@@ -45,6 +46,7 @@ function VideoPage() {
   // Обработчики кликов
   const handleLikeClick = async (event) => {
     event.preventDefault();
+    // const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=1";
     const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=1";
 
     await fetch(url, {
@@ -59,7 +61,8 @@ function VideoPage() {
 
   const handleDislikeClick = async (event) => {
     event.preventDefault();
-    const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=0";
+    // const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=0";
+    const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=0";
 
     await fetch(url, {
       method: "GET",
@@ -76,12 +79,12 @@ function VideoPage() {
       <header className="ChooseVideoPage-header">
         <div className="top-bar content">
           <div className="label">
-            <h1>RUTUBE</h1>
+            <h1><a href="/">RUTUBE</a></h1>
             <div id="label-circle"></div>
           </div>
-          <button className="refresh-button" onClick={handleRefresh}>
+          <a href="/" className="refresh-button">
             REFRESH
-          </button>
+          </a>
         </div>
       </header>
       <div className="body-container content">
