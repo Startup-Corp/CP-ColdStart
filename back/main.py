@@ -11,6 +11,7 @@ df = data.get_data_for_pred()
 
 model = ModelGBM('./files/lgbr_v1.txt', df)
 app = Flask(__name__)
+CORS(app)
 
 # user = pd.DataFrame(0, index=df.index, columns=df.columns)
 user = pd.DataFrame(0, columns=df['video_id'], index=[0])
@@ -64,17 +65,16 @@ def comment():
 
     return jsonify({'status': 'ok'})
 
-CORS(app)
 
 @app.route('/predict', methods=['GET'])
 def predict():
+    global recomended
     if recomended:
         for i in recomended:
             user[i] -= 0.5
 
     ids = model.pred()
     
-    global recomended
     recomended = ids
     # print(ids)
 
