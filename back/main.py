@@ -18,6 +18,14 @@ user = pd.DataFrame(0, columns=df['video_id'], index=[0])
 recomended: list = []
 rec_id: int | None = None
 
+reaction_rating_table = {
+    'like': lambda x : x + 1,
+    'dislike': lambda x : x - 8,
+    'comment': lambda x : x + 8,
+    'share': lambda x : x + 4,
+    'view': lambda x : x + 0.5
+}
+
 @app.route('/video', methods=['GET']) # передать доп данные для отображения
 def video():
     video_id = int(request.args.get('id'))
@@ -30,8 +38,7 @@ def video():
     rec_id = video_id
     # recomended = None
 
-    user[video_id] += 1
-
+    user[video_id] = reaction_rating_table['view'](user[video_id])
 
     return data.get_data_to_view(video_id)
 # title, description, category, likes, dislikes
@@ -39,26 +46,11 @@ def video():
 @app.route('/react', methods=['GET'])
 def react():
     video_id = int(request.args.get('id'))
-    rating = int(request.args.get('rating', 0))
+    type_reaction = request.args.get('rating', 'view')
     if not video_id:
         return jsonify({'status': 'no video_id'})
 
-    # rating = inp_data.get('rating', 0) # 0 - dis, 1 - like
-    
-    if rating == 1:
-        user[video_id] += 2
-    else:
-        user[video_id] = -2
-
-    return jsonify({'status': 'ok'})
-
-@app.route('/comment', methods=['GET'])
-def comment():
-    video_id = int(request.args.get('id'))
-    comment = int(request.args.get('comment', 0))
-
-    if not video_id:
-        return jsonify({'status': 'no video_id'})
+    user[video_id] = reaction_rating_table[type_reaction](user[video_id])
 
     return jsonify({'status': 'ok'})
 
