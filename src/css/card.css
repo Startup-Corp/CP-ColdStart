@@ -7,16 +7,7 @@
   transition: border 0.3s ease;
   max-width: calc(100% - 10px);
 
-  user-select: none; /* Отключает возможность выделения текста */
-  outline: none; /* Убирает контур фокуса */
-  text-decoration: none; /* Убирает подчеркивание */
-
   color: white;
-}
-
-.card::selection {
-  background: none; /* Убирает выделение текста */
-  color: inherit; /* Цвет текста остается прежним */
 }
 
 .border {

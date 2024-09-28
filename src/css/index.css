@@ -18,3 +18,17 @@ code {
   max-width: 90%;
   margin: auto;
 }
+
+a {
+  user-select: none; /* Отключает возможность выделения текста */
+  outline: none; /* Убирает контур фокуса */
+  text-decoration: none; /* Убирает подчеркивание */
+  color: white;
+
+  cursor: pointer;
+}
+
+a::selection {
+  background: none; /* Убирает выделение текста */
+  color: inherit; /* Цвет текста остается прежним */
+}

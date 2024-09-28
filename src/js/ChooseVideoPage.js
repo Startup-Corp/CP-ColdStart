@@ -7,7 +7,8 @@ function ChooseVideoPage() {
   const [data, setData] = useState(null);
 
   function get_data() {
-    fetch("http://87.242.86.81:5005/predict")
+    // fetch("http://87.242.86.81:5005/predict")
+    fetch("http://127.0.0.1:5005/predict")
     .then((response) => response.json())
     .then((data) => setData(data))
     .catch((error) => console.error(error));
@@ -38,12 +39,12 @@ function ChooseVideoPage() {
       <header className="ChooseVideoPage-header">
         <div className="top-bar content">
           <div className="label">
-            <h1>RUTUBE</h1>
+            <h1><a href="/">RUTUBE</a></h1>
             <div id="label-circle"></div>
           </div>
-          <button className="refresh-button" onClick={handleRefresh}>
+          <a className="refresh-button" onClick={handleRefresh}>
             REFRESH
-          </button>
+          </a>
         </div>
       </header>
       <div className="content">
