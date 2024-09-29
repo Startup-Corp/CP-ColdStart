@@ -37,21 +37,21 @@ class ModelGBM:
         not_interacted = rating_vec.columns[(rating_vec == 0).iloc[0]]
         self.dataset = self.dataset[self.dataset['video_id'].isin(not_interacted)]
 
-        # top_views_df = self.dataset.sort_values(top_views, ascending=False)['video_id'].head(20)
-        # avg_wt_df = self.dataset.sort_values(avg_wt, ascending=False)['video_id'].head(20)
-        # f_avg_wt_df = self.dataset.sort_values(f_avg_wt, ascending=False)['video_id'].head(20)
+        top_views_df = self.dataset.sort_values(top_views, ascending=False)['video_id'].head(20)
+        avg_wt_df = self.dataset.sort_values(avg_wt, ascending=False)['video_id'].head(20)
+        f_avg_wt_df = self.dataset.sort_values(f_avg_wt, ascending=False)['video_id'].head(20)
         # # long_views_df = self.dataset.sort_values(long_views, ascending=False)['video_id'].head(100)
-        # cat_pop_df = self.dataset.sort_values(cat_pop, ascending=False)['video_id'].head(20)
+        cat_pop_df = self.dataset.sort_values(cat_pop, ascending=False)['video_id'].head(20)
         # # cr_clk_df = self.dataset.sort_values(cr_clk, ascending=False)['video_id'].head(100)
 
-        only_data = self.dataset[['video_id', top_views, avg_wt, f_avg_wt, cat_pop]]
-        only_data_sum = only_data / only_data.sum(axis=0).values
-        print(only_data.shape, only_data_sum.shape)
+        # only_data = self.dataset[['video_id', top_views, avg_wt, f_avg_wt, cat_pop]]
+        # only_data_sum = only_data / only_data.sum(axis=0).values
+        # print(only_data.shape, only_data_sum.shape)
 
-        top_views_df = pd.Series(np.random.choice(only_data['video_id'], 20, p=only_data_sum[top_views]))
-        avg_wt_df = pd.Series( np.random.choice(only_data['video_id'], 20, p=only_data_sum[avg_wt]))
-        f_avg_wt_df = pd.Series(np.random.choice(only_data['video_id'], 20, p=only_data_sum[f_avg_wt]))
-        cat_pop_df = pd.Series(np.random.choice(only_data['video_id'], 20, p=only_data_sum[cat_pop]))
+        # top_views_df = pd.Series(np.random.choice(only_data['video_id'], 20, p=only_data_sum[top_views]))
+        # avg_wt_df = pd.Series( np.random.choice(only_data['video_id'], 20, p=only_data_sum[avg_wt]))
+        # f_avg_wt_df = pd.Series(np.random.choice(only_data['video_id'], 20, p=only_data_sum[f_avg_wt]))
+        # cat_pop_df = pd.Series(np.random.choice(only_data['video_id'], 20, p=only_data_sum[cat_pop]))
 
         res = csr_array(rating_vec.values).dot(self.csr).toarray().flatten()
         top_similar = pd.Series(res.argsort()[-100:][::-1])
