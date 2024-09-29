@@ -53,7 +53,8 @@ class Dataset:
 
 
     def get_data_by_ids(self, ids: list):
-        top_10 = self.df_video[self.df_video['video_id'].isin(ids)]
+        # top_10 = self.df_video[self.df_video['video_id'].isin(ids['video_id'])]
+        top_10 = self.df_video.merge(ids, on='video_id', how='inner')
         print(len(top_10))
         res = []
         for i in range(len(top_10)):
@@ -65,6 +66,7 @@ class Dataset:
                 'category': v['category_id'],
                 'views': int(v['v_year_views']),
                 'pub_datetime': v['v_pub_datetime'],
+                'candidate_src': v['category'],
             })
         return res
 

@@ -64,7 +64,8 @@ def predict():
         user[rec_id] += 0.5
 
     ids = model.pred(user)
-    recomended = ids
+    print('pred', ids)
+    recomended = ids['video_id']
     # print(ids)
 
     response = {

@@ -16,7 +16,7 @@ class ModelGBM:
         self.dataset = dataset
         self.csr_path = csr_path
         self.csr = self.load_csr()
-        # self.hour_to_cat = pd.read_pickle('./files/hour_to_cat.pkl')
+        self.hour_to_cat = pd.read_pickle('./files/hour_to_cat.pkl')
 
     def load_csr(self):
         return load_npz(self.csr_path)
@@ -76,7 +76,7 @@ class ModelGBM:
         user_features - вектор признаков юзера (region, city)
         """
         candidates = self.candidate_selection(rating_vec, user_features)
-        candidates_res = np.array([])
+        candidates_res = pd.DataFrame(columns=['video_id', 'category'])
         cand_name = ['top_views_df', 'avg_wt_df', 'f_avg_wt_df', 'cat_pop_df']
         free_space = 2
         for i, cand in enumerate(candidates[:-1]):
@@ -92,15 +92,18 @@ class ModelGBM:
             # print(candidates_df.drop(columns=['video_id']).columns)
             res = self.model.predict(candidates_df.drop(columns=['video_id']))
         
-            res_ids = candidates_df[['video_id']].assign(rating=res).sort_values('rating', ascending=False).head(head)['video_id'].values
+            res_ids = candidates_df[['video_id']].assign(rating=res).sort_values('rating', ascending=False).head(head)['video_id'].to_frame()
+            res_ids['category'] = cand_name[i]
             print(cand_name[i], res_ids)
-            candidates_res = np.concatenate([candidates_res, res_ids])
+            candidates_res = pd.concat([candidates_res, res_ids])
         
         candidates_df = self.dataset[self.dataset['video_id'].isin(candidates[-1])]
         if candidates_df.shape[0] >= head:
             res = self.model.predict(candidates_df.drop(columns=['video_id']))
-            res_ids = candidates_df[['video_id']].assign(rating=res).sort_values('rating', ascending=False).head(free_space)['video_id'].values
-            candidates_res = np.concatenate([candidates_res, res_ids])
+            res_ids = candidates_df[['video_id']].assign(rating=res).sort_values('rating', ascending=False).head(free_space)['video_id'].to_frame()
+            res_ids['category'] = 'similar'
+            print('similar', res_ids)
+            candidates_res = pd.concat([candidates_res, res_ids])
 
         return candidates_res
 
