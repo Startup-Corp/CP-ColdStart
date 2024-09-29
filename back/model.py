@@ -55,8 +55,12 @@ class ModelGBM:
         # cat_pop_df = pd.Series(np.random.choice(only_data['video_id'], 20, p=only_data_sum[cat_pop]))
 
         res = csr_array(rating_vec.values).dot(self.csr).toarray().flatten()
-        top_similar = pd.Series(res.argsort()[-100:][::-1])
 
+        # top_similar = pd.Series(res)#
+        # top_similar = top_similar[top_similar.isin(not_interacted)]
+        # top_similar = pd.Series(res).sort_values(ascending=False).head(100)
+
+        top_similar = pd.Series(res.argsort()[-100:][::-1])
         top_similar = top_similar[top_similar.isin(not_interacted)]
 
         seen = top_views_df
