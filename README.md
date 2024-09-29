@@ -1,6 +1,7 @@
 ## Ссылки
 
 Screencast: [ссылка](https://disk.yandex.ru/d/tOuoz6p9HlZ3lw)
+
 Сайт: [ссылка](http://87.242.86.81:3000/)
 
 ## Содержание
@@ -9,6 +10,7 @@ Screencast: [ссылка](https://disk.yandex.ru/d/tOuoz6p9HlZ3lw)
 	1. Запуск Baackend-а
 	2. Запуск Frontend-а
 2. Полезные файлы
+3. Важно
 ## Запуск приложения на своей системе
 ### Запуск Backend
 
@@ -39,3 +41,7 @@ npm start
 ## Полезные файлы
 
 ML исследования - [ColdStart/notebooks · Startup-Corp/ColdStart (github.com)](https://github.com/Startup-Corp/ColdStart/tree/main/notebooks)
+
+## Важно
+
+Одновременно, работу алгоритма может проверять один пользователь (так как приложение не мультисессионное).
