@@ -37,23 +37,35 @@ class ModelGBM:
         not_interacted = rating_vec.columns[(rating_vec == 0).iloc[0]]
         self.dataset = self.dataset[self.dataset['video_id'].isin(not_interacted)]
 
-        top_views_df = self.dataset.sort_values(top_views, ascending=False)['video_id'].head(20)
-        avg_wt_df = self.dataset.sort_values(avg_wt, ascending=False)['video_id'].head(20)
-        f_avg_wt_df = self.dataset.sort_values(f_avg_wt, ascending=False)['video_id'].head(20)
-        # long_views_df = self.dataset.sort_values(long_views, ascending=False)['video_id'].head(100)
-        cat_pop_df = self.dataset.sort_values(cat_pop, ascending=False)['video_id'].head(20)
-        # cr_clk_df = self.dataset.sort_values(cr_clk, ascending=False)['video_id'].head(100)
+        # top_views_df = self.dataset.sort_values(top_views, ascending=False)['video_id'].head(20)
+        # avg_wt_df = self.dataset.sort_values(avg_wt, ascending=False)['video_id'].head(20)
+        # f_avg_wt_df = self.dataset.sort_values(f_avg_wt, ascending=False)['video_id'].head(20)
+        # # long_views_df = self.dataset.sort_values(long_views, ascending=False)['video_id'].head(100)
+        # cat_pop_df = self.dataset.sort_values(cat_pop, ascending=False)['video_id'].head(20)
+        # # cr_clk_df = self.dataset.sort_values(cr_clk, ascending=False)['video_id'].head(100)
+
+        only_data = self.dataset[['video_id', top_views, avg_wt, f_avg_wt, cat_pop]]
+        only_data_sum = only_data / only_data.sum(axis=0).values
+        print(only_data.shape, only_data_sum.shape)
+
+        top_views_df = pd.Series(np.random.choice(only_data['video_id'], 20, p=only_data_sum[top_views]))
+        avg_wt_df = pd.Series( np.random.choice(only_data['video_id'], 20, p=only_data_sum[avg_wt]))
+        f_avg_wt_df = pd.Series(np.random.choice(only_data['video_id'], 20, p=only_data_sum[f_avg_wt]))
+        cat_pop_df = pd.Series(np.random.choice(only_data['video_id'], 20, p=only_data_sum[cat_pop]))
 
         res = csr_array(rating_vec.values).dot(self.csr).toarray().flatten()
         top_similar = pd.Series(res.argsort()[-100:][::-1])
 
+        top_similar = top_similar[top_similar.isin(not_interacted)]
 
+        seen = top_views_df
+        out = [top_views_df]
+        for i in [avg_wt_df, f_avg_wt_df, cat_pop_df, top_similar]:
+            not_seen = i[~i.isin(seen)]
+            out.append(not_seen)
+            seen = pd.concat([seen, not_seen])
 
-        return (top_similar,
-               top_views_df,
-               avg_wt_df,
-               f_avg_wt_df,
-               cat_pop_df)
+        return out
 
 
 
@@ -64,15 +76,29 @@ class ModelGBM:
         """
         candidates = self.candidate_selection(rating_vec, user_features)
         candidates_res = np.array([])
-        cand_name = ['top_similar', 'top_views_df', 'avg_wt_df', 'f_avg_wt_df', 'cat_pop_df']
-        for i, cand in enumerate(candidates):
+        cand_name = ['top_views_df', 'avg_wt_df', 'f_avg_wt_df', 'cat_pop_df']
+        free_space = 2
+        for i, cand in enumerate(candidates[:-1]):
             candidates_df = self.dataset[self.dataset['video_id'].isin(cand)]
+            print(candidates_df.shape)
+            head = 2
+            if candidates_df.shape[0] == 0:
+                free_space += 2
+                continue
+            if candidates_df.shape[0] < head:
+                free_space += head - candidates_df.shape[0]
+                head = candidates_df.shape[0]
             # print(candidates_df.drop(columns=['video_id']).columns)
             res = self.model.predict(candidates_df.drop(columns=['video_id']))
         
-            res_ids = candidates_df[['video_id']].assign(rating=res).sort_values('rating', ascending=False).head(2)['video_id'].values
+            res_ids = candidates_df[['video_id']].assign(rating=res).sort_values('rating', ascending=False).head(head)['video_id'].values
             print(cand_name[i], res_ids)
             candidates_res = np.concatenate([candidates_res, res_ids])
+        
+        candidates_df = self.dataset[self.dataset['video_id'].isin(candidates[-1])]
+        res = self.model.predict(candidates_df.drop(columns=['video_id']))
+        res_ids = candidates_df[['video_id']].assign(rating=res).sort_values('rating', ascending=False).head(free_space)['video_id'].values
+        candidates_res = np.concatenate([candidates_res, res_ids])
 
         return candidates_res
 
