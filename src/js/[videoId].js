@@ -6,12 +6,16 @@ import dislike from "../dislike.svg";
 import share from "../Share.svg";
 
 let videoData = null;
+let likeClicked = false;
+let dislikeClicked = false;
+let isShared = false;
+let commentIsClicked = false;
 function VideoPage() {
   const [data, setData] = useState(null);
   // const { id } = useParams();
   const id = window.location.search.split("=")[1];
-  // const url = "http://87.242.86.81:5005/video?id=" + id;
-  const url = "http://127.0.0.1:5005/video?id=" + id;
+  const url = "http://87.242.86.81:5005/video?id=" + id;
+  // const url = "http://127.0.0.1:5005/video?id=" + id;
 
   function get_video_data(url) {
     console.log(url);
@@ -43,11 +47,12 @@ function VideoPage() {
     window.location.reload();
   };
 
-  // Обработчики кликов
-  const handleLikeClick = async (event) => {
+  const handleCommentClick = async (event) => {
+    if (commentIsClicked) return;
+    commentIsClicked = true;
     event.preventDefault();
-    // const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=1";
-    const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=1";
+    const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=comment";
+    // const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=comment";
 
     await fetch(url, {
       method: "GET",
@@ -57,12 +62,39 @@ function VideoPage() {
     })
       .then((response) => response.json())
       .catch((error) => console.error(error));
+
+    const likeP = document.getElementById("likes");
+    likeP.textContent = Number(likeP.textContent) + 1;
+  }
+
+  // Обработчики кликов
+  const handleLikeClick = async (event) => {
+    if (likeClicked) return;
+    likeClicked = true;
+    event.preventDefault();
+    const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=like";
+    // const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=like";
+
+    await fetch(url, {
+      method: "GET",
+      headers: {
+        ContentType: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .catch((error) => console.error(error));
+
+    const likeP = document.getElementById("likes");
+    likeP.textContent = Number(likeP.textContent) + 1;
   };
 
   const handleDislikeClick = async (event) => {
+    if (dislikeClicked) return;
+    dislikeClicked = true;
+
     event.preventDefault();
-    // const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=0";
-    const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=0";
+    const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=dislike";
+    // const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=dislike";
 
     await fetch(url, {
       method: "GET",
@@ -72,11 +104,14 @@ function VideoPage() {
     })
       .then((response) => response.json())
       .catch((error) => console.error(error));
+
+    const dislikeP = document.getElementById("dislikes");
+    dislikeP.textContent = Number(dislikeP.textContent) + 1;
   };
 
   const handleShareClick = () => {
     const copy = window.location.href;
-    const textArea = document.createElement('textarea');
+    const textArea = document.createElement("textarea");
     textArea.value = copy;
     // Добавляем его в DOM
     document.body.appendChild(textArea);
@@ -84,16 +119,31 @@ function VideoPage() {
     textArea.select();
     textArea.setSelectionRange(0, 99999); // Для мобильных устройств
     // Копируем текст
-    document.execCommand('copy');
+    document.execCommand("copy");
     // Удаляем временный элемент
     document.body.removeChild(textArea);
-    
+
     const toast = document.getElementById("Toast");
     toast.classList.add("toast-show");
 
     setTimeout(() => {
       toast.classList.remove("toast-show");
-  }, 2000); 
+    }, 2000);
+
+    if (isShared) return;
+    isShared = true;
+
+    const url = "http://87.242.86.81:5005/react?id=" + id + "&rating=share";
+    // const url = "http://127.0.0.1:5005/react?id=" + id + "&rating=share";
+
+    fetch(url, {
+      method: "GET",
+      headers: {
+        ContentType: "application/json",
+      },
+    })
+      .then((response) => response.json())
+      .catch((error) => console.error(error));
   };
 
   return (
@@ -120,19 +170,24 @@ function VideoPage() {
             />
             <div className="category_section">
               <h3>{videoData.title}</h3>
-              <p>Категория {videoData.category}</p>
+              <p>Категория: {videoData.category_id}</p>
             </div>
             <div className="react-section">
+              {/* Комментарий */}
+              <div className="comments-section" onClick={handleCommentClick}>
+                <p id="comments">Комментировать</p>
+              </div>
+
               {/* Лайк */}
               <div className="like-section" onClick={handleLikeClick}>
                 <img src={like} alt="Likes" />
-                <p>{videoData.v_likes}</p>
+                <p id="likes">{videoData.v_likes}</p>
               </div>
 
               {/* Дизлайк */}
               <div className="dislike-section" onClick={handleDislikeClick}>
                 <img src={dislike} alt="Dislikes" />
-                <p>{videoData.v_dislikes}</p>
+                <p id="dislikes">{videoData.v_dislikes}</p>
               </div>
 
               {/* Шаринг */}
@@ -144,7 +199,7 @@ function VideoPage() {
         </div>
       </div>
       <div id="Toast" className="">
-          <p>Ссылка скопирована!</p>
+        <p>Ссылка скопирована!</p>
       </div>
     </div>
   );
