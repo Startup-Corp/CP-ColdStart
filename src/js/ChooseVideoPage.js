@@ -3,9 +3,11 @@ import VideoCard from "./VideoCard";
 import React, { useState, useEffect } from "react";
 
 let recommendations = null;
+// Логика страницы выбора видео
 function ChooseVideoPage() {
   const [data, setData] = useState(null);
 
+  // Получение рекомендаций с сервера
   function get_data() {
     // fetch("http://127.0.0.1:5005/predict")
     fetch("http://87.242.86.81:5005/predict")
@@ -13,7 +15,6 @@ function ChooseVideoPage() {
     .then((data) => setData(data))
     .catch((error) => console.error(error));
   }
-
   useEffect(() => get_data(), []);
   
   console.log(data);
@@ -27,6 +28,7 @@ function ChooseVideoPage() {
     window.location.reload();
   };
 
+  // Рендер страницы
   return (
     <div className="ChooseVideoPage">
       <header className="ChooseVideoPage-header">

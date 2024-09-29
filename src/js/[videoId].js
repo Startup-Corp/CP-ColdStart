@@ -5,6 +5,7 @@ import like from "../like.svg";
 import dislike from "../dislike.svg";
 import share from "../Share.svg";
 
+// Окно просмотра видео
 let videoData = null;
 let likeClicked = false;
 let dislikeClicked = false;
@@ -12,11 +13,11 @@ let isShared = false;
 let commentIsClicked = false;
 function VideoPage() {
   const [data, setData] = useState(null);
-  // const { id } = useParams();
   const id = window.location.search.split("=")[1];
   const url = "http://87.242.86.81:5005/video?id=" + id;
   // const url = "http://127.0.0.1:5005/video?id=" + id;
 
+  // Получение информации и выбранном пользователем вдео
   function get_video_data(url) {
     console.log(url);
 
@@ -43,10 +44,7 @@ function VideoPage() {
   videoData = data;
   console.log(videoData);
 
-  const handleRefresh = () => {
-    window.location.reload();
-  };
-
+  // Event по нажатию на кнопку "Комментарий"
   const handleCommentClick = async (event) => {
     if (commentIsClicked) return;
     commentIsClicked = true;
@@ -67,7 +65,7 @@ function VideoPage() {
     likeP.textContent = Number(likeP.textContent) + 1;
   }
 
-  // Обработчики кликов
+  // Event по нажатию на кнопку "Like"
   const handleLikeClick = async (event) => {
     if (likeClicked) return;
     likeClicked = true;
@@ -88,6 +86,7 @@ function VideoPage() {
     likeP.textContent = Number(likeP.textContent) + 1;
   };
 
+  // Event по нажатию на кнопку "Dilike"
   const handleDislikeClick = async (event) => {
     if (dislikeClicked) return;
     dislikeClicked = true;
@@ -109,6 +108,7 @@ function VideoPage() {
     dislikeP.textContent = Number(dislikeP.textContent) + 1;
   };
 
+  // Event по нажатию на кнопку "Share"
   const handleShareClick = () => {
     const copy = window.location.href;
     const textArea = document.createElement("textarea");

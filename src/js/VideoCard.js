@@ -1,8 +1,8 @@
 import '../css/card.css';
 import eye from "../Eye.svg"
 
+// Модуль описывающий одно видео
 function VideoCard(rec, index) {
-
   // Преобразуем строку в объект Date
   const date = new Date(rec.pub_datetime);
 
