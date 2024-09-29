@@ -34,6 +34,8 @@ class ModelGBM:
         # long_views = 'v_long_views_30_days' # кол-во длинных просмотров
         cat_pop = 'v_category_popularity_percent_30_days' # популярность категории
         # cr_clk = 'v_cr_click_long_view_7_days' # привлекает длинные клики
+        not_interacted = rating_vec.columns[(rating_vec == 0).iloc[0]]
+        self.dataset = self.dataset[self.dataset['video_id'].isin(not_interacted)]
 
         top_views_df = self.dataset.sort_values(top_views, ascending=False)['video_id'].head(20)
         avg_wt_df = self.dataset.sort_values(avg_wt, ascending=False)['video_id'].head(20)
@@ -45,15 +47,13 @@ class ModelGBM:
         res = csr_array(rating_vec.values).dot(self.csr).toarray().flatten()
         top_similar = pd.Series(res.argsort()[-100:][::-1])
 
-        not_interacted = rating_vec.columns[(rating_vec == 0).iloc[0]]
 
 
-
-        return (top_similar[top_similar.isin(not_interacted)],
-               top_views_df[top_views_df.isin(not_interacted)],
-               avg_wt_df[avg_wt_df.isin(not_interacted)],
-               f_avg_wt_df[f_avg_wt_df.isin(not_interacted)],
-               cat_pop_df[cat_pop_df.isin(not_interacted)])
+        return (top_similar,
+               top_views_df,
+               avg_wt_df,
+               f_avg_wt_df,
+               cat_pop_df)
 
 
 
