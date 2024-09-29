@@ -16,7 +16,7 @@ class ModelGBM:
         self.dataset = dataset
         self.csr_path = csr_path
         self.csr = self.load_csr()
-        self.hour_to_cat = pd.read_pickle('./files/hour_to_cat.pkl')
+        # self.hour_to_cat = pd.read_pickle('./files/hour_to_cat.pkl')
 
     def load_csr(self):
         return load_npz(self.csr_path)
